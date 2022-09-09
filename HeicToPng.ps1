@@ -2,6 +2,8 @@ $ThisPath = $PSScriptRoot
 
 # Get-Childitem -Recurse | Select-Object PSParentPath,Extension -Unique # to get list of files in the directory to decide which you want to convert
 
+New-Item -ItemType Directory -Path "./HeicBackups/" -Force #ensuring HeicBackups exists
+
 $data = Get-ChildItem "$ThisPath\*" -Include *.HEIC, *.JPG, *.PNG, *.MOV, *.plist, *.mov, *.jpg, *.mp4, *.heic 
 $data | ForEach-Object {
     
@@ -32,8 +34,7 @@ $data | ForEach-Object {
     $newExt = $ext
     if($newExt.ToLower() -eq ".heic"){
         $newExt = ".png"
-        New-Item -ItemType File -Path "./HeicBackups/$LastWriteTime$type$ext" -Force
-        Copy-Item $_.Name -Path "./HeicBackups/$LastWriteTime$type$ext" -Force #backup the original just in case
+        Copy-Item $_.Name "./HeicBackups/$LastWriteTime$type$ext" -Force #backup the original just in case
     }
     
     $_ | Rename-Item -NewName {
